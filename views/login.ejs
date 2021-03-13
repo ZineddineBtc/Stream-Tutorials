@@ -1,0 +1,21 @@
+<%- include("partials/header") %>
+
+<div class="div-container">
+    <h1 class="display-2" style="margin-bottom: 4%;">Stream Tutorials</h1>
+    <div class="sign-form">
+        <h1 style="margin-bottom: 15%; color: #fff;">Login</h1>
+        <form action= <%= "/login/" + view %> method="post">
+            <input name="username" type="email" id="input-email-login" class="form-control" placeholder="Email address" required autofocus>
+            <input name="password" type="password" class="form-control input-password" placeholder="Password" required>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin: 7% 0%;">Login</button>
+        </form>
+        <p style="color: #fff;">Or</p>
+        <a class="btn btn-block btn-social btn-google" href="/auth/google" role="button" style="width: 100%;">
+            <i class="fab fa-google"></i>
+            Sign In with Google
+        </a>
+    </div>
+    <a href=<%= "/register/" + view %> style="margin-top: 3%; text-decoration: none">You're new here? Register now!</a>
+</div>
+
+<%- include("partials/footer") %>

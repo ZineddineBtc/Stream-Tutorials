@@ -12,7 +12,6 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const LocalStrategy = require("passport-local");
 const nodemailer = require("nodemailer");
 const User = require("./models/user");
-const indexRoute = require("./routes/index");
 
 mongoose.connect("mongodb+srv://admin-zineddine:adminpassword@u-read-bolt-users.s5w0z.mongodb.net/MyDatabase", 
                 {useNewUrlParser: true, useUnifiedTopology: true });
@@ -48,6 +47,7 @@ passport.use(new GoogleStrategy({
         }, function (err, user) {return done(err, user);});
   }
 ));
+module.exports = passport;
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -57,10 +57,141 @@ const transporter = nodemailer.createTransport({
     }
 }); 
 
-app.use("/", indexRoute);
-app.use("/index", indexRoute);
+//////////////////////////////    Routes    ///////////////////////////////
 
+app.get("/", function(req, res){
+    res.redirect("/index");
+});
+
+app.get("/index", function(req, res){
+    if(!req.isAuthenticated()){
+        res.render("index", {
+            view: "index",
+            isAuthenticated: false, 
+            name: null
+        }); 
+    } else {
+        res.render("index", {
+            view: "index",
+            isAuthenticated: true, 
+            name: req.user.name
+        });
+    } 
+});
+
+app.get("/login/:view", function(req, res){
+    res.render("login", {view: req.params.view}); 
+});
+
+app.post("/login/:view", function(req, res, next) {
+    passport.authenticate("local", function(error, user, info) {
+        if (error) return next(error); 
+        if (!user) return res.redirect("/login/"+req.params.view); 
+        req.logIn(user, function(error) {
+            if (error) return next(error); 
+            return res.redirect("/"+req.params.view);
+        });
+    })(req, res, next);
+});
+
+app.get("/register/:view", function(req, res){
+    res.render("register", {view: req.params.view}); 
+});
+
+app.post("/register/:view", function(req, res){
+    User.register(
+        new User({
+            username: req.body.username, 
+            name:req.body.name, 
+            points: 0
+        }), 
+        req.body.password, function(error, user){
+        if(error){
+            console.log(error);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/"+req.params.view);
+        });
+    });
+});
+
+app.get("/auth/google", passport.authenticate("google", {
+    scope: ['https://www.googleapis.com/auth/userinfo.profile',
+             'https://www.googleapis.com/auth/userinfo.email']
+}));
+
+app.get("/auth/google/index",
+    passport.authenticate( "google", {
+        successRedirect: "/",
+        failureRedirect: "/login"
+})); 
+
+app.get("/feedback", function(req, res){
+    if(!req.isAuthenticated()){
+        res.render("feedback", {
+            view: "feedback",
+            isAuthenticated: false, 
+            name: null
+        }); 
+    } else {
+        res.render("feedback", {
+            view: "feedback",
+            isAuthenticated: true, 
+            name: req.user.name
+        }); 
+    }
+    
+}); 
+
+app.post("/feedback", function(req, res){
+    let mailBody = "PROJECT: Stream Tutorials \n-------------------\n";
+    if(req.isAuthenticated()) {
+        mailBody += "Username: "+ req.user.username + "\n" +
+                   "Name: "+ req.user.name + "\n";
+    } else {
+        mailBody += "No Username, no name \n";
+    }
+    mailBody += req.body.feedbackDescription;
+    const mailOptions = {
+        from: "zineddine.bettouche.dev@gmail.com",
+        to: "zineddine.bettouche.dev@gmail.com",
+        subject: req.body.feedbackTitle,
+        text: mailBody
+    };  
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error){
+            console.log(error);
+        } else {
+            console.log("Email sent: " + info.response);  
+            res.redirect("/feedback-sent");
+        }
+    });
+});
+
+app.get("/feedback-sent", function(req, res){
+    if(!req.isAuthenticated()){
+        res.render("feedback-sent", {
+            view: "feedback-sent",
+            isAuthenticated: false, 
+            name: null
+        }); 
+    } else {
+        res.render("feedback-sent", {
+            view: "feedback-sent",
+            isAuthenticated: true, 
+            name: req.user.name
+        }); 
+    }
+    
+}); 
+
+app.get("/logout/:view", function(req, res){
+    req.logout();
+    res.redirect("/"+req.params.view);
+});
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server running on port 3000");
 });
+

@@ -1,0 +1,39 @@
+<%- include("partials/header") %>
+
+<section id="header-section">
+  <div class="container-fluid" id="global-container-fluid">
+    <!-- Nav Bar -->
+    <% if(!isAuthenticated) { %>
+      <%- include("partials/nav-unsigned") %>
+    <% } else { %>
+      <%- include("partials/nav-signed") %>
+    <% } %>
+    <!-- Title -->
+    <div class="row title-row">
+      <h1 class="title" id="title-index"> Feedback </h1>
+    </div>
+  </div>
+</section>
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+    <div class="container">
+        <form  action="/feedback" method="post">
+            <div class="mb-3">
+                <input type="text" name="feedbackTitle" class="form-control" id="feedback-title" placeholder="Title">
+            </div>
+            <div class="mb-3">
+                <textarea name="feedbackDescription" rows="6" class="form-control" placeholder="Description"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </form>
+    </div>
+</div>
+
+<%- include("partials/social-links") %>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- My jQuery -->
+<script type="text/javascript" src="javascript/feedback.js"></script>
+
+<%- include("partials/footer") %>

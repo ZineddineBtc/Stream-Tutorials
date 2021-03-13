@@ -1,0 +1,34 @@
+<%- include("partials/header") %>
+
+<section id="header-section">
+  <div class="container-fluid" id="global-container-fluid">
+    <!-- Nav Bar -->
+    <% if(!isAuthenticated) { %>
+      <%- include("partials/nav-unsigned") %>
+    <% } else { %>
+      <%- include("partials/nav-signed") %>
+    <% } %>
+    <!-- Title -->
+    <div class="row title-row">
+      <h1 class="title" id="title-index"> Feedback Received </h1>
+    </div>
+  </div>
+</section>
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+  <div class="container">
+    <h1 class="display-2" style="margin-bottom: 3%;">Thank you for your feedback!</h1>
+    <p class="lead" style="font-size: 1.5rem;">
+      Your feedback is important to us. It assures that we develop a wider coverage of services to our client.
+    </p>
+  </div>
+</div>
+
+<%- include("partials/social-links") %>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- My jQuery -->
+<script type="text/javascript" src="javascript/feedback.js"></script>
+
+<%- include("partials/footer") %>

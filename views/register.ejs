@@ -1,0 +1,28 @@
+<%- include("partials/header") %>
+
+<div class="div-container">
+    <h1 class="display-2" style="margin-bottom: 4%;">Stream Tutorials</h1>
+    <div class="sign-form">
+        <h1 style="margin-bottom: 15%; color: #fff;">Register</h1>
+        <form action=<%= "/register/" + view %> method="post">
+            <input name="name" type="text" id="input-name" class="form-control" placeholder="Name" required autofocus>
+            <input name="username" type="email" id="input-email-register" class="form-control" placeholder="Email address" required>
+            <input name="password" type="password" id="input-password" class="form-control input-password" placeholder="Password" pattern=".{8,12}" required>
+            <button id="btn-register" class="btn btn-primary btn-lg" style="width: 100%; margin: 7% 0%;">Register</button>
+        </form>
+        <p style="color: #fff;">Or</p>
+        <a class="btn btn-block btn-social btn-google" href="/auth/google" role="button" style="width: 100%;">
+            <i class="fab fa-google"></i>
+            Register with Google
+        </a>
+    </div>
+    <a href=<%= "/login/" + view %> style="margin-top: 3%; text-decoration: none">You already have an account? Login now!</a>
+</div>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- My jQuery -->
+<script type="text/javascript" src="javascript/register.js"></script>
+
+<%- include("partials/footer") %>
