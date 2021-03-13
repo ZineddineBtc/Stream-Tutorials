@@ -1,1 +1,112 @@
-Hello
+<%- include("partials/header") %>
+
+<section id="header-section">
+  <div class="container-fluid" id="global-container-fluid">
+    <!-- Nav Bar -->
+    <% if(!isAuthenticated) { %>
+      <%- include("partials/nav-unsigned") %>
+    <% } else { %>
+      <%- include("partials/nav-signed") %>
+    <% } %>
+    <!-- Title -->
+    <div class="row title-row">
+      <h1 class="title" id="title-index"> Take your learning experience <br> to another level </h1>
+    </div>
+  </div>
+</section>
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+  <div class="container">
+    <h1 class="display-2" style="margin-bottom: 3%;">Follow tutorials live!</h1>
+    <p class="lead" style="font-size: 1.5rem;">
+        <strong><em>Stream Tutorials</em></strong> is a platform for everyone to follow courses, tutorials, and much more, <strong>LIVE</strong>. 
+        <br>Ask your tutor questions and enjoy the luxary of getting live demonstrations for a more efficient learning experience.
+    </p>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<section class="testimonials">
+    <div id="testimonial-carousel-student" class="carousel slide" data-bs-ride="false">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <h2>
+                    I used to struggle to resolve issues when I followed a pre-recorded tutorial.
+                    Here tutors explain them to me live! 
+                </h2>
+                <img class="testimonial-img" src="images/dog-img.jpg" alt="dog-profile">
+                <em>Pebbles, New York</em>
+            </div>
+            <div class="carousel-item">
+                <h2 class="testimonial-text">
+                    I always had a problem when it came to committing to a tutorial;<br>
+                    it takes less time, but also studying in groups is more enjoyable!
+                </h2>
+                <img class="testimonial-img" src="images/lady-img.jpg" alt="lady-profile">
+                <em>Beverly, Illinois</em>
+            </div>
+        </div>
+        <a class="carousel-control-prev" data-bs-target="#testimonial-carousel-student" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" data-bs-target="#testimonial-carousel-student" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+</section>
+
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+    <div class="container">
+      <h1 class="display-2" style="margin-bottom: 3%;">Teach groups or individuals!</h1>
+      <p class="lead" style="font-size: 1.5rem;">
+          You can become a tutor and teach others your skills in groups or individually. <br>
+          <strong>Earn money</strong> while enjoying helping others learn their subjects.
+      </p>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<section class="testimonials">
+    <div id="testimonial-carousel-tutor" class="carousel slide" data-bs-ride="false">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <h2 class="testimonial-text">
+                    2020 proved to me that we can teach students on Zoom calls, and sometimes it's even more enjoyable as everyone joins from the comfort of their homes. 
+                </h2>
+                <img class="testimonial-img" src="images/dog-img.jpg" alt="dog-profile">
+                <em>Pebbles, New York</em>
+            </div>
+            <div class="carousel-item">
+                <h2 class="testimonial-text">
+                    I love teaching on my free time, and this platform is just the perfect fit for me. I set a time for the tutorial on Zoom, and help my students with their issues.
+                </h2>
+                <img class="testimonial-img" src="images/lady-img.jpg" alt="lady-profile">
+                <em>Beverly, Illinois</em>
+            </div>
+        </div>
+        <a class="carousel-control-prev" data-bs-target="#testimonial-carousel-tutor" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" data-bs-target="#testimonial-carousel-tutor" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+</section>
+
+
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+  <div class="container" style="text-align: center;">
+    <h1 class="display-3" style="margin-bottom: 3%;">Join now and start your journey!</h1>
+    <div>
+      <form action="/login" method="get" style="display: inline-block;">
+        <button type="submit" class="btn btn-outline-dark btn-lg">Login</button>
+      </form>
+      <form action="/register" method="get" style="display: inline-block;">
+        <button type="submit" class="btn btn-dark btn-lg">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/social-links") %>
+
+<%- include("partials/footer") %>

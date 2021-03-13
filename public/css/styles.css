@@ -1,0 +1,118 @@
+
+/***************************  login & register  ********************************/
+.div-container {
+    padding: 3% 10%;
+    text-align: center;
+    margin: 0 auto;
+    background-color: #eee;
+}
+.sign-form {
+    margin: 0 auto;
+    width: 400px;
+    padding: 50px;
+    border: 1px #ddd solid;
+    border-radius: 10px;
+    background: #6a040f;
+}
+#input-email-register {
+    border-radius: 0;
+}
+#input-email-login, #input-name {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.input-password {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+/***************************  index.ejs  ********************************/
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+ }
+#header-section {
+    background-color: #6a040f;
+}
+#global-container-fluid {
+    padding: 0 10%;
+}
+#nav-brand {
+    font-family: "Ubuntu";
+    font-size: 2.5rem;
+}
+#navbar {
+    margin-bottom: 2rem;
+}
+.nav-item {
+    padding: 0 10px;
+}
+.link-navbar {
+    font-family: "Montserrat";
+}
+.title-row {
+  text-align: center;
+}
+.title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    color: white;
+    line-height: 1.5;
+    padding-bottom: 2rem;
+}
+.btn-dark {
+    background-color: #6a040f;
+}
+
+.testimonials {
+    background-color: #212529;
+    text-align: center;
+    color: #fff;
+}
+.carousel-item {
+    padding: 7% 15%;
+}
+.testimonial-img {
+    border-radius: 100%;
+    width: 10%;
+    margin: 20px;
+}
+
+
+#footer {
+    background-color: #6a040f;
+    text-align: center;
+    padding: 2%;
+}
+.socials-link {
+    padding: 10px;
+    text-decoration: none;
+    color: #fff;
+}
+.socials-link:hover {
+    text-decoration: underline;
+}
+#copyright{
+    margin-top: 40px;
+    color: #fff;
+}
+
+
+/***************************  @media  ********************************/
+
+@media (max-width: 1024px) {
+    
+}
+@media (max-width: 768px) {
+    #global-container-fluid {
+        padding: 1% 5%;
+    }
+    #nav-brand {
+        font-family: "Ubuntu";
+        font-size: 1.5rem;
+    }
+    .nav-item {
+        padding: 0 5px;
+    }
+    
+}

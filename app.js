@@ -10,8 +10,9 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const LocalStrategy = require("passport-local");
-const User = require("./models/user");
 const nodemailer = require("nodemailer");
+const User = require("./models/user");
+const indexRoute = require("./routes/index");
 
 mongoose.connect("mongodb+srv://admin-zineddine:adminpassword@u-read-bolt-users.s5w0z.mongodb.net/MyDatabase", 
                 {useNewUrlParser: true, useUnifiedTopology: true });
@@ -56,26 +57,9 @@ const transporter = nodemailer.createTransport({
     }
 }); 
 
-app.get("/", function(req, res){
-    res.redirect("/index");
-});
+app.use("/", indexRoute);
+app.use("/index", indexRoute);
 
-app.get("/index", function(req, res){
-    res.render("index");
-    /* if(!req.isAuthenticated()){
-        res.render("index", {
-            view: "index",
-            isAuthenticated: false, 
-            name: null
-        }); 
-    } else {
-        res.render("index", {
-            view: "index",
-            isAuthenticated: true, 
-            name: req.user.name
-        });
-    }  */
-});
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server running on port 3000");
