@@ -5,7 +5,8 @@ const findOrCreate = require("mongoose-findorcreate");
 const UserSchema = new mongoose.Schema({
     username: String,
     password: String,
-    name: String
+    name: String,
+    bio: {type: String, default: ""}
 });
 
 UserSchema.plugin(passportLocalMongoose);

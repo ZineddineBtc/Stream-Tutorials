@@ -97,7 +97,25 @@
     color: #fff;
 }
 
-
+/***************************  profile.ejs  ********************************/
+#profile-name {
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    line-height: 1.5;
+}
+#img-profile{
+    padding: 1%;
+    border: 1px solid #212529;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+#textarea-bio{
+    height: 90%;
+    resize: none;
+    background-color: #6a040f;
+    color: #fff;
+}
 /***************************  @media  ********************************/
 
 @media (max-width: 1024px) {
@@ -114,5 +132,7 @@
     .nav-item {
         padding: 0 5px;
     }
-    
+    #btn-edit-save {
+        height: 90%;
+    }
 }

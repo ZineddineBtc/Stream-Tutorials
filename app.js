@@ -13,7 +13,7 @@ const LocalStrategy = require("passport-local");
 const nodemailer = require("nodemailer");
 const User = require("./models/user");
 
-mongoose.connect("mongodb+srv://admin-zineddine:adminpassword@u-read-bolt-users.s5w0z.mongodb.net/MyDatabase", 
+mongoose.connect("mongodb://localhost:27017/MyDatabase",//"mongodb+srv://admin-zineddine:adminpassword@mycluster.sprtu.mongodb.net/myDatabase", 
                 {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set("useCreateIndex", true); 
 
@@ -79,6 +79,9 @@ app.get("/index", function(req, res){
     } 
 });
 
+
+////// LOGIN - REGISTER //////
+
 app.get("/login/:view", function(req, res){
     res.render("login", {view: req.params.view}); 
 });
@@ -126,6 +129,44 @@ app.get("/auth/google/index",
         successRedirect: "/",
         failureRedirect: "/login"
 })); 
+
+app.get("/logout/:view", function(req, res){
+    req.logout();
+    if(req.params.view === "profile"){
+        res.redirect("/");
+    } else {
+        res.redirect("/"+req.params.view);
+    }
+});
+
+////// Profile //////
+
+app.get("/profile", function(req, res){
+    if(!req.isAuthenticated()){
+        res.render("login", {view: "profile"});
+    } else {
+        res.render("profile", {
+            view: "profile",
+            isAuthenticated: true, 
+            name: req.user.name,
+            bio: req.user.bio
+        });
+    } 
+});
+app.post("/profile/update/:bio", function(req, res){
+    if(req.isAuthenticated()){
+        User.findOneAndUpdate({_id: (req.user._id)}, 
+            {$set: {bio: req.params.bio}}, 
+            function(error, doc){
+                if(error){
+                    console.log(error);
+                }   
+            }
+        );
+    }
+});
+
+////// Feedback - sent //////
 
 app.get("/feedback", function(req, res){
     if(!req.isAuthenticated()){
@@ -186,10 +227,7 @@ app.get("/feedback-sent", function(req, res){
     
 }); 
 
-app.get("/logout/:view", function(req, res){
-    req.logout();
-    res.redirect("/"+req.params.view);
-});
+
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server running on port 3000");
