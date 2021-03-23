@@ -6,7 +6,9 @@ const UserSchema = new mongoose.Schema({
     username: String,
     password: String,
     name: String,
-    bio: {type: String, default: ""}
+    bio: {type: String, default: ""},
+    imgData: {type: Buffer, default: null}, 
+    imgContentType: String
 });
 
 UserSchema.plugin(passportLocalMongoose);

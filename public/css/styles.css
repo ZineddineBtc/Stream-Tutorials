@@ -17,7 +17,7 @@
 #input-email-register {
     border-radius: 0;
 }
-#input-email-login, #input-name {
+#input-email-login, #input-register-name {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
@@ -98,10 +98,18 @@
 }
 
 /***************************  profile.ejs  ********************************/
-#profile-name {
+#h3-name {
     font-family: 'Montserrat', sans-serif;
     color: white;
     line-height: 1.5;
+    width: 100%;
+}
+#input-name {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #6a040f;
+    color: #fff;
+    line-height: 1.5;
+    text-align: center;
 }
 #img-profile{
     padding: 1%;
@@ -109,6 +117,7 @@
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    cursor: pointer;
 }
 #textarea-bio{
     height: 90%;
@@ -116,6 +125,51 @@
     background-color: #6a040f;
     color: #fff;
 }
+.div-card-tutorial {
+    margin: 5px auto;
+    text-align: center;
+    width: 100%;
+}
+#btn-card-delete {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto;
+    border: 1px solid black;
+    background-image: url("images/delete.png");
+}
+#input-card-title {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+    font-weight: bold;
+}
+#textarea-card-description {
+    border-radius: 0;
+    border-top: 0;
+}
+#input-card-date {
+    border-radius: 0;
+    border-bottom: 0;
+}
+#input-card-time {
+    border-radius: 0;
+    border-top: 0;
+}
+#input-card-url {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+#p-invalid-inputs {
+    color: red;
+    display: none;
+    text-align: left;
+}
+#btn-card-create {
+    width: 100%; 
+    margin: 20px 0 0;
+}
+
 /***************************  @media  ********************************/
 
 @media (max-width: 1024px) {
@@ -134,5 +188,8 @@
     }
     #btn-edit-save {
         height: 90%;
+    }
+    #h1-my-tutorials {
+        text-align: center;
     }
 }

@@ -1,25 +1,37 @@
 //jshint esversion:6
 require("dotenv").config();
 const fs = require("fs");
+const busboy = require("connect-busboy");
+const path = require("path");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const findOrCreate = require("mongoose-findorcreate");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const LocalStrategy = require("passport-local");
 const nodemailer = require("nodemailer");
 const User = require("./models/user");
+const Card = require("./models/card");
 
 mongoose.connect("mongodb://localhost:27017/MyDatabase",//"mongodb+srv://admin-zineddine:adminpassword@mycluster.sprtu.mongodb.net/myDatabase", 
-                {useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.set("useCreateIndex", true); 
+    {
+        useNewUrlParser: true, 
+        useUnifiedTopology: true,
+        useFindAndModify: false, 
+        useCreateIndex: true
+    }
+);
+
 
 const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(busboy());
 app.set("view engine", "ejs");
 app.use(session({
     secret: process.env.SECRET,
@@ -47,7 +59,6 @@ passport.use(new GoogleStrategy({
         }, function (err, user) {return done(err, user);});
   }
 ));
-module.exports = passport;
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -145,25 +156,83 @@ app.get("/profile", function(req, res){
     if(!req.isAuthenticated()){
         res.render("login", {view: "profile"});
     } else {
-        res.render("profile", {
-            view: "profile",
-            isAuthenticated: true, 
-            name: req.user.name,
-            bio: req.user.bio
-        });
+        if(req.user.imgData === null){
+            res.render("profile", {
+                view: "profile",
+                isAuthenticated: true, 
+                name: req.user.name,
+                bio: req.user.bio,
+                src: null
+            });
+        } else {
+            let src = "data:image/"+req.user.imgContentType+
+                      ";base64,"+ req.user.imgData.toString('base64');
+            res.render("profile", {
+                view: "profile",
+                isAuthenticated: true, 
+                name: req.user.name,
+                bio: req.user.bio,
+                src: src
+            });
+        }
     } 
 });
-app.post("/profile/update/:bio", function(req, res){
+
+app.post("/profile/update/:toUpdate/:name/:bio", function(req, res){
     if(req.isAuthenticated()){
-        User.findOneAndUpdate({_id: (req.user._id)}, 
-            {$set: {bio: req.params.bio}}, 
-            function(error, doc){
-                if(error){
-                    console.log(error);
-                }   
-            }
-        );
+        let toUpdate = req.params.toUpdate;
+        if(toUpdate === "update-name") {
+            User.findOneAndUpdate({_id: (req.user._id)}, {$set: {name: req.params.name}}, function(error, doc){if(error){console.log(error);}});
+            console.log("name updated");
+        } else if(toUpdate === "update-bio") {
+            User.findOneAndUpdate({_id: (req.user._id)}, {$set: {bio: req.params.bio}}, function(error, doc){if(error){console.log(error);}});
+            console.log("bio updated");
+        } else if(toUpdate === "update-name-bio") {
+            User.findOneAndUpdate({_id: (req.user._id)}, {$set: {name: req.params.name, bio: req.params.bio}}, function(error, doc){if(error){console.log(error);}});
+            console.log("name and bio updated");
+        }
     }
+});
+
+app.post("/profile/image/update", function(req, res){
+    res.send(req.files);
+});
+
+app.post("/profile/get-cards", function(req, res){
+    Card.find({userID: req.user._id}, function (error, docs) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send(docs);
+        }
+    });
+});
+
+app.post("/profile/create-card", function(req, res){
+    let newCard = new Card();
+    newCard.userID = req.user._id;
+    newCard.title = req.body.title;
+    newCard.description = req.body.description;
+    newCard.date = req.body.date;
+    newCard.time = req.body.time;
+    newCard.url = req.body.url;
+    newCard.save(function(error, createdCard){
+        if(!error) {
+            res.send({
+                cardID: createdCard._id,
+                cardUserID: createdCard.userID
+            });
+        } else {
+            console.log(error);
+        }
+    });
+});
+
+app.post("/profile/delete-card/:id", function(req, res) {
+    const id = req.params.id;
+    Card.findOneAndRemove({_id: id}, function(error){
+        if(error) console.log(error);
+    }); 
 });
 
 ////// Feedback - sent //////

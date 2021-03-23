@@ -5,7 +5,7 @@
     <div class="sign-form">
         <h1 style="margin-bottom: 15%; color: #fff;">Register</h1>
         <form action=<%= "/register/" + view %> method="post">
-            <input name="name" type="text" id="input-name" class="form-control" placeholder="Name" required autofocus>
+            <input name="name" type="text" id="input-register-name" class="form-control" placeholder="Name" required autofocus>
             <input name="username" type="email" id="input-email-register" class="form-control" placeholder="Email address" required>
             <input name="password" type="password" id="input-password" class="form-control input-password" placeholder="Password" pattern=".{8,12}" required>
             <button id="btn-register" class="btn btn-primary btn-lg" style="width: 100%; margin: 7% 0%;">Register</button>
