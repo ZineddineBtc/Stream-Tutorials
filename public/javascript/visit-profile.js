@@ -43,7 +43,7 @@ function getCardHTML(title, description, datetime, url) {
                 '</p>'+
             '</div>'+
             '<div class="card-footer">'+ 
-                '<a href="'+url+'" class="card-link" target="_blank" rel="noopener noreferrer" style="text-decoration: none"> Link </a>'+
+                '<a href="//'+url+'" class="card-link" target="_blank" rel="noopener noreferrer" style="text-decoration: none"> Link </a>'+
             '</div>'+
         '</div>'+
     '</div>';

@@ -157,11 +157,8 @@ app.get("/auth/google/index",
 
 app.get("/logout/:view", function(req, res){
     req.logout();
-    if(req.params.view === "profile"){
-        res.redirect("/");
-    } else {
-        res.redirect("/"+req.params.view);
-    }
+    res.redirect("/"+req.params.view);
+    
 });
 
 /////////////////////////// Profile ///////////////////////////////
