@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const CardSchema = {
     userID: String,
+    userName: String,
     title: String,
     description: String,
-    date: String,
-    time: String,
+    datetime: String,
     url: String
 };
 

@@ -1,12 +1,27 @@
-function getProfileImage(){
+////////////////////    Get cards    //////////////////////
+let cards = [];
+function getAllCards(){
     $.ajax({
-        url: "profile/get-profile-image",
         type: "POST",
-        contentType: "application/json",
-        success: function(data){
-
-        }
+        url: "/profile/get-cards",
+        success: function(cards) {
+            addCards(cards);
+        },
+        error: function(xhr, status, error) {
+            console.log("Error: \n"+ error.message);
+        },
     });
+}
+function addCards(cards) {
+    for(var i=0; i<cards.length; i++){
+        $("#div-col-card-create").after(
+            getCardHTML(
+                cards[i]._id, cards[i].userID, 
+                cards[i].title, cards[i].description, 
+                cards[i].datetime, 
+                cards[i].url)
+        );
+    }
 }
 getAllCards();
 ////////////////////    Name & Bio    //////////////////////
@@ -63,7 +78,7 @@ function updateNameAndBio(toUpdate, name, bio){
 
 ////////////////////    Image Update/Delete    //////////////////////
 let imgBtnsDisplayed = false;
-$("#img-profile").click(function(){
+$(".img-profile").click(function(){
     if(imgBtnsDisplayed) {
         $("#div-img-btns").css("display", "none");
     } else {
@@ -73,73 +88,57 @@ $("#img-profile").click(function(){
 })
 
 $("#btn-img-update").click(function(){
-    $("#input-img").focus().trigger("click");
+    $("#image").focus().trigger("click");
 });
 
-$("#input-img").change(function(){
+$("#image").change(function(){
     if(!extensionAndSizeChecked()) return;
-    console.log($("#input-img").val());
+    console.log($("#image").val());
     $("#form-img-update").trigger("submit");
 });
-/* function uploadImage(){
-    $.ajax({
-        url: "profile/image/"+$("#input-img").val() +"/"+extension,
-        type: "POST",
-        contentType: "application/json",
-        success: function(data){}
-    });
-} */
+
 let extension;
 function extensionAndSizeChecked(){
-    if(!$("#input-img").val()) {
+    if(!$("#image").val()) {
         alert("Please select a profile picture");
         return false;
     }
     const acceptableExtensions = ["jpeg", "jpg", "png"];
-    const imagePath = $("#input-img").val();
+    const imagePath = $("#image").val();
     extension = imagePath.split(".")[imagePath.split(".").length-1];
     if (acceptableExtensions.includes(extension)) {
-        const fileSize = $("#input-img")[0].files[0].size/1024/1024;
+        const fileSize = $("#image")[0].files[0].size/1024/1024;
         if(fileSize < 5) {
             return true;
         } else {
             alert("Size should not exceed 5 MiB");
-            $("#input-img").val("");
+            $("#image").val("");
             return false;
         }
     } else {
         alert("Please upload a picture (JPEG, JPG, PNG) exclusively");
-        $("#input-img").val("");
+        $("#image").val("");
         return false;
     }
 }
-////////////////////    Get cards    //////////////////////
-let cards = [];
-function getAllCards(){
-    $.ajax({
+
+/*$("#form-img-update").on("submit", function(event) {
+    event.preventDefault();
+    const files = $("#input-img").get(0).files;                   
+    $.ajax({                         
         type: "POST",
-        url: "/profile/get-cards",
-        success: function(cards) {
-            addCards(cards);
-        },
-        error: function(xhr, status, error) {
-            console.log("Error: \n"+ error.message);
-        },
-    });
-}
-function addCards(cards) {
-    for(var i=0; i<cards.length; i++){
-        $("#div-col-card-create").after(
-            getCardHTML(
-                cards[i]._id, cards[i].userID, 
-                cards[i].title, cards[i].description, 
-                cards[i].date, cards[i].time, 
-                cards[i].url)
-        );
-    }
-}
+        url: "profile/upload-photo", 
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: files[0],
+        success: function(result){
+            alert(result); 
+        }
+    });  
+});*/
 ////////////////////    Create card    //////////////////////
-let errorMessage, title, description, date, time, url;
+let errorMessage, title, description, datetime, url;
 $("#btn-card-create").click(()=>{
     getInputs();
     if(!areInputsValid()){
@@ -154,8 +153,7 @@ $("#btn-card-create").click(()=>{
 function getInputs(){
     title = $("#input-card-title").val();
     description = $("#textarea-card-description").val();
-    date = $("#input-card-date").val();
-    time = $("#input-card-time").val();
+    datetime = $("#input-card-datetime").val();
     url = $("#input-card-url").val();
 }
 function areInputsValid() {
@@ -177,10 +175,10 @@ function areInputsValid() {
         errorBool = true;
     }
     
-    if(date == null || time == null) {
+    if(datetime == null) {
         errorMessage += "Date and time must be selected\n";
         errorBool = true;
-    } else if(date.length == 0 || time.length == 0) {
+    } else if(datetime.length == 0) {
         errorMessage += "Date and time must be selected\n";
         errorBool = true;
     } 
@@ -195,7 +193,7 @@ function areInputsValid() {
 
     return !errorBool;
 }
-function getCardHTML(cardID, cardUserID, title, description, date, time, url) {
+function getCardHTML(cardID, cardUserID, title, description, datetime, url) {
     let card =
     '<div class="col">'+
         '<div class="card div-card-tutorial" style="width: 100%;">'+
@@ -203,7 +201,7 @@ function getCardHTML(cardID, cardUserID, title, description, date, time, url) {
             '<div class="card-header">'+ 
                 '<div class="row">'+
                     '<div class="col-9" style="text-align: left">'+
-                        date +' '+ time +
+                        datetime +
                     '</div>'+
                     '<div class="col-1">'+
                         '<button id="'+ cardID +'" class="btn btn-outline-danger btn-sm btn-card-delete">delete</button>'+
@@ -217,7 +215,7 @@ function getCardHTML(cardID, cardUserID, title, description, date, time, url) {
                 '</p>'+
             '</div>'+
             '<div class="card-footer">'+ 
-                '<a href="'+url+'" class="card-link" style="text-decoration: none"> Link </a>'+
+                '<a href="'+url+'" class="card-link" target="_blank" rel="noopener noreferrer" style="text-decoration: none"> Link </a>'+
             '</div>'+
         '</div>'+
     '</div>';
@@ -228,8 +226,7 @@ function pushCard() {
     const newCard = {
         title: title,
         description: description,
-        date: date,
-        time: time,
+        datetime: datetime,
         url: url
     };
     pushCardToDB(newCard);
@@ -242,9 +239,9 @@ function pushCardToDB(newCard) {
         data: newCard,
         success: function (IDs) {
             $("#div-col-card-create").after(
-                getCardHTML(IDs.cardID, IDs.cardUserID, title, description, date, time, url)
+                getCardHTML(IDs.cardID, IDs.cardUserID, title, description, datetime, url)
             );
-            title=""; description=""; date=""; time=""; url="";
+            title=""; description=""; datetime=""; url="";
         },
         error: function (xhr, status, error) {
             console.log("Error: \n"+ error.message);
@@ -254,8 +251,7 @@ function pushCardToDB(newCard) {
 function emptyInputs(){
     $("#input-card-title").val("");
     $("#textarea-card-description").val("");
-    $("#input-card-date").val("");
-    $("#input-card-time").val("");
+    $("#input-card-datetime").val("");
     $("#input-card-url").val("");
 }
 ////////////////////    Delete card    //////////////////////

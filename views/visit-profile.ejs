@@ -1,0 +1,44 @@
+<%- include("partials/header") %>
+
+<section id="header-section">
+  <div class="container-fluid" id="global-container-fluid">
+    <!-- Nav Bar -->
+    <% if(!isAuthenticated) { %>
+      <%- include("partials/nav-unsigned") %>
+    <% } else { %>
+      <%- include("partials/nav-signed") %>
+    <% } %>
+    <!-- Title -->
+    <div class="row title-row" style="padding-bottom: 2%;">
+        <div class="col-md-4">
+            <div id="div-profile-img">
+                <img class="img-profile" src=<%=src%>>
+            </div>
+            <span id="span-profileID" style="display: none;"><%=profileID%></span>
+            <h3 id="h3-name"><%=profileName%></h3>
+        </div>
+        <div class="col-md-8">
+            <textarea disabled class="form-control" id="textarea-bio"><%=profileBio%></textarea>
+        </div>
+    </div>
+  </div>
+</section>
+<div class="jumbotron jumbotron-fluid" style="padding: 7% 10%;">
+    <div class="container">
+        <h1 class="display-4" style="margin-bottom: 3%;" id="h1-my-tutorials">Tutorials</h1>
+        <h5 class="lead" style="display: none;" id="#h5-no-cards">No tutorials posted yet.</h5>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1" style="margin-bottom: 2%;">
+            <div class="col" id="hidden-col" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<%- include("partials/social-links") %>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- My jQuery -->
+<script type="text/javascript" src="/javascript/visit-profile.js"></script>
+
+<%- include("partials/footer") %>

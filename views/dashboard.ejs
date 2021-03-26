@@ -1,0 +1,30 @@
+<%- include("partials/header") %>
+
+<section id="header-section">
+  <div class="container-fluid" id="global-container-fluid-dashboard">
+    <!-- Nav Bar -->
+    <% if(!isAuthenticated) { %>
+      <%- include("partials/nav-unsigned") %>
+    <% } else { %>
+      <%- include("partials/nav-signed") %>
+    <% } %>
+    <input class="form-control" type="text" name="search" id="input-search" placeholder="Search...">
+  </div>
+</section>
+<div class="jumbotron jumbotron-fluid" id="div-jumbotron-results">
+  <div class="container">
+    <h1 class="display-4" style="margin-bottom: 3%;" id="h1-my-tutorials">Search Results:</h1>
+    <p class="lead" id="p-no-results">Nothing.</p>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1" style="margin-bottom: 2%;">
+        <div class="col" id="hidden-col" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+<%- include("partials/social-links") %>
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- My jQuery -->
+<script type="text/javascript" src="javascript/dashboard.js"></script>
+
+<%- include("partials/footer") %>

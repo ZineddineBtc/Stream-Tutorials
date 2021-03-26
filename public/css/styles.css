@@ -111,7 +111,7 @@
     line-height: 1.5;
     text-align: center;
 }
-#img-profile{
+.img-profile{
     padding: 1%;
     border: 1px solid #212529;
     border-radius: 50%;
@@ -170,10 +170,30 @@
     margin: 20px 0 0;
 }
 
+/*************************  dashboard.ejs ****************************/
+#global-container-fluid-dashboard {
+    padding: 0 10% 1%;
+}
+#input-search {
+    width: 50%;
+    margin: -3% auto 0;
+    font-size: 1.4rem;
+
+}
+#div-jumbotron-results {
+    padding: 7% 10%;
+}
+h6 {
+  cursor: pointer;  
+}
+
 /***************************  @media  ********************************/
 
 @media (max-width: 1024px) {
-    
+    #input-search {
+        width: 70%;
+        font-size: 1.2rem;
+    }
 }
 @media (max-width: 768px) {
     #global-container-fluid {
@@ -190,6 +210,13 @@
         height: 90%;
     }
     #h1-my-tutorials {
+        text-align: center;
+    }
+    #input-search {
+        width: 80%;
+        font-size: 1.1rem;
+    }
+    #p-no-results {
         text-align: center;
     }
 }

@@ -13,17 +13,17 @@
         <div class="col-md-4">
             <div id="div-profile-img">
                 <% if(src === null) {%>
-                <img id="img-profile" src="images/profile-placeholder.png" alt="">
+                <img class="img-profile" src="images/profile-placeholder.png" alt="">
                 <% } else { %>
-                <img src= <%= src %>>
+                <img class="img-profile" src= <%= src %>>
                 <% } %>
             </div>
             <div id="div-img-btns" style="display: none;">
-                <form id="form-img-update" action="/profile/image/update" method="post" encType="multipart/form-data">
-                    <input name="file" type="file" id="input-img" style="position: absolute; left: -9999px;">
-                    <button type="button" id="btn-img-update" class="btn btn-outline-light">Update</button>
-                </form>
+                <button id="btn-img-update" class="btn btn-outline-light">Update</button>
                 <button id="btn-img-delete" class="btn btn-outline-danger">Delete</button>
+                <form id="form-img-update" method="post" action="/profile/upload-photo" enctype="multipart/form-data" style="position: absolute; left: -9999px;">
+                    <input type="file" id="image" name="image">
+                </form>
             </div>
             <h3 id="h3-name"><%=name%></h3>
             <input class="form-control" id="input-name" type="text" style="display:none">
@@ -47,9 +47,8 @@
                         <form action="">
                             <input    id="input-card-title"          name="inputCardTitle" class="form-control" type="text" placeholder="Title" required>
                             <textarea id="textarea-card-description" name="textareaCardDescription" class="form-control"  rows="3" placeholder="Description" required></textarea>
-                            <input    id="input-card-date"           name="inputCardDate" class="form-control" type="date" required>
-                            <input    id="input-card-time"           name="inputCardTime" class="form-control" type="time" required>
-                            <input    id="input-card-url"            name="inputCardUrl" class="form-control" type="url" placeholder=Link (Zoom, MS Teams...)" required>
+                            <input    id="input-card-datetime"           name="inputCardDatetime" class="form-control" type="text" placeholder="Date and Time" required>
+                            <input    id="input-card-url"            name="inputCardUrl" class="form-control" type="url" placeholder="Link (Zoom, MS Teams...)" required>
                             <p id="p-invalid-inputs">Error</p>
                             <button   id="btn-card-create" class="btn btn-primary" type="button">Create</button>
                         </form>

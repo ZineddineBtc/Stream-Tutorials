@@ -3,6 +3,7 @@ require("dotenv").config();
 const fs = require("fs");
 const busboy = require("connect-busboy");
 const path = require("path");
+const multer = require("multer");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
@@ -16,6 +17,8 @@ const LocalStrategy = require("passport-local");
 const nodemailer = require("nodemailer");
 const User = require("./models/user");
 const Card = require("./models/card");
+const { send } = require("process");
+const { profile } = require("console");
 
 mongoose.connect("mongodb://localhost:27017/MyDatabase",//"mongodb+srv://admin-zineddine:adminpassword@mycluster.sprtu.mongodb.net/myDatabase", 
     {
@@ -29,6 +32,7 @@ mongoose.connect("mongodb://localhost:27017/MyDatabase",//"mongodb+srv://admin-z
 
 const app = express();
 app.use(express.static("public"));
+app.use(express.static(__dirname));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(busboy());
@@ -68,6 +72,16 @@ const transporter = nodemailer.createTransport({
     }
 }); 
 
+let storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, 'uploads')
+    },
+    filename: (req, file, callback) => {
+        callback(null, file.fieldname + '-' + Date.now())
+    }
+});
+let upload = multer({storage: storage});
+
 //////////////////////////////    Routes    ///////////////////////////////
 
 app.get("/", function(req, res){
@@ -91,7 +105,7 @@ app.get("/index", function(req, res){
 });
 
 
-////// LOGIN - REGISTER //////
+/////////////////////////// LOGIN - REGISTER ///////////////////////////
 
 app.get("/login/:view", function(req, res){
     res.render("login", {view: req.params.view}); 
@@ -150,7 +164,7 @@ app.get("/logout/:view", function(req, res){
     }
 });
 
-////// Profile //////
+/////////////////////////// Profile ///////////////////////////////
 
 app.get("/profile", function(req, res){
     if(!req.isAuthenticated()){
@@ -166,7 +180,7 @@ app.get("/profile", function(req, res){
             });
         } else {
             let src = "data:image/"+req.user.imgContentType+
-                      ";base64,"+ req.user.imgData.toString('base64');
+                      ";base64,"+ req.user.imgData.toString("base64");
             res.render("profile", {
                 view: "profile",
                 isAuthenticated: true, 
@@ -194,8 +208,21 @@ app.post("/profile/update/:toUpdate/:name/:bio", function(req, res){
     }
 });
 
-app.post("/profile/image/update", function(req, res){
-    res.send(req.files);
+app.post("/profile/upload-photo", upload.single("image"), (req, res, next) => {
+    const p = path.join(__dirname + "/uploads/" + req.file.filename);
+    imgData = fs.readFileSync(p);
+    imgContentType = "image/png";
+    User.findOneAndUpdate({_id: (req.user._id)}, {$set: {imgData: imgData, imgContentType: imgContentType}}, 
+        function(error, doc){
+            if(error) console.log(error);
+            else {
+                fs.unlink(p, (error) => {
+                    if (error) throw error;
+                    console.log(p + " was deleted");
+                }); 
+                res.redirect("/profile");
+            }
+        });
 });
 
 app.post("/profile/get-cards", function(req, res){
@@ -211,10 +238,10 @@ app.post("/profile/get-cards", function(req, res){
 app.post("/profile/create-card", function(req, res){
     let newCard = new Card();
     newCard.userID = req.user._id;
+    newCard.userName = req.user.name;
     newCard.title = req.body.title;
     newCard.description = req.body.description;
-    newCard.date = req.body.date;
-    newCard.time = req.body.time;
+    newCard.datetime = req.body.datetime;
     newCard.url = req.body.url;
     newCard.save(function(error, createdCard){
         if(!error) {
@@ -235,8 +262,97 @@ app.post("/profile/delete-card/:id", function(req, res) {
     }); 
 });
 
-////// Feedback - sent //////
+///////////////////////////     Dashboard   ///////////////////////////
+app.get("/dashboard", function(req, res) {
+    if(!req.isAuthenticated()){
+        res.render("login", {view: "profile"});
+    } else {
+        res.render("dashboard", {
+            view: "dashboard",
+            isAuthenticated: true, 
+            name: req.user.name
+        });
+    }
+})
 
+app.post("/dashboard/search/:query", function(req, res){
+    if(!req.isAuthenticated()) 
+        return res.render("login", {view: "profile"});
+    const query = req.params.query;
+    const regex = new RegExp(query, 'i');
+    Card.find({title: {$regex: regex}}, function (error, docs) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send(docs);
+        }
+    });
+});
+
+app.post("/dashboard/get-profile-photo/:profileID", function(req, res){
+    User.find({_id: mongoose.Types.ObjectId(req.params.profileID)}, 
+        function(error, users){
+            if(users[0].imgContentType == null) {
+                src = "/images/profile-placeholder.png";
+            } else if(users[0].imgContentType == "") {
+                src = "/images/profile-placeholder.png";
+            } else {
+                src = "data:image/"+users[0].imgContentType+
+                      ";base64,"+ users[0].imgData.toString("base64");
+            } 
+            res.send(src);
+        });
+});
+
+app.post("/dashboard/visit-profile/:profileID", function(req, res){
+    if(!req.isAuthenticated()) 
+        return res.render("login", {view: "dashboard"});
+    const profileID = req.params.profileID;
+    if(profileID == req.user._id) {
+        res.redirect("/profile");
+    } else {
+        res.redirect("/visit-profile/"+profileID);
+    }
+});
+///////////////////////////  visit-profile  ///////////////////////////
+app.get("/visit-profile/:profileID", function(req, res){
+    if(!req.isAuthenticated()) {
+        res.render("login", {view: "dashboard"});
+    } else {
+        User.find({_id: mongoose.Types.ObjectId(req.params.profileID)}, 
+        function(error, users){
+            if(users[0].imgContentType == null) {
+                src = "/images/profile-placeholder.png";
+            } else if(users[0].imgContentType == "") {
+                src = "/images/profile-placeholder.png";
+            } else {
+                src = "data:image/"+users[0].imgContentType+
+                      ";base64,"+ users[0].imgData.toString("base64");
+            } 
+            res.render("visit-profile", {
+                view: "visit-profile",
+                isAuthenticated: true, 
+                name: req.user.name,
+                profileID: req.params.profileID,
+                profileName: users[0].name,
+                profileBio: users[0].bio,
+                src: src
+            });
+        });
+    }
+});
+
+app.post("/visit-profile/get-cards/:profileID", function(req, res){
+    Card.find({userID: req.params.profileID}, function (error, docs) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send(docs);
+        }
+    });
+});
+
+/////////////////////////// Feedback - sent ///////////////////////////
 app.get("/feedback", function(req, res){
     if(!req.isAuthenticated()){
         res.render("feedback", {
