@@ -1,14 +1,10 @@
 $("#input-search").on("input", ()=>{
     const searchQuery = $("#input-search").val();
     if(searchQuery == null) {
-        $(".col-added").remove();
-        $("#p-no-results").css("display", "block");
-        $("#p-loading").css("display", "none");
+        adjustUI(0);
         return;
     } else if(searchQuery == "") {
-        $(".col-added").remove();
-        $("#p-no-results").css("display", "block");
-        $("#p-loading").css("display", "none");
+        adjustUI(0);
         return;
     }
     $("#p-no-results").css("display", "none");
@@ -27,6 +23,15 @@ function sendQueryToServer(searchQuery){
             console.log("Error: \n"+ error.message);
         }
     });
+}
+function adjustUI(length) {
+    $(".col-added").remove();
+    $("#p-loading").css("display", "none");
+    if(length == 0) {
+        $("#p-no-results").css("display", "block");
+    } else {
+        $("#p-no-results").css("display", "none");
+    }
 }
 function addCards(cards){
     $("#p-loading").css("display", "none");
