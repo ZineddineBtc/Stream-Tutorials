@@ -1,6 +1,7 @@
 ////////////////////    Get cards    //////////////////////
 let cards = [];
 function getAllCards(){
+    $("#p-loading").css("display", "block");
     $.ajax({
         type: "POST",
         url: "/profile/get-cards",
@@ -13,6 +14,7 @@ function getAllCards(){
     });
 }
 function addCards(cards) {
+    $("#p-loading").css("display", "none");
     for(var i=0; i<cards.length; i++){
         $("#div-col-card-create").after(
             getCardHTML(
@@ -233,11 +235,13 @@ function pushCard() {
     cards.push(newCard);
 }
 function pushCardToDB(newCard) {
+    $("#p-loading").css("display", "block");
     $.ajax({
         type: "POST",
         url: "/profile/create-card",
         data: newCard,
         success: function (IDs) {
+            $("#p-loading").css("display", "none");
             $("#div-col-card-create").after(
                 getCardHTML(IDs.cardID, IDs.cardUserID, title, description, datetime, url)
             );

@@ -20,7 +20,7 @@ const Card = require("./models/card");
 const { send } = require("process");
 const { profile } = require("console");
 
-mongoose.connect("mongodb://localhost:27017/MyDatabase",//"mongodb+srv://admin-zineddine:adminpassword@mycluster.sprtu.mongodb.net/myDatabase", 
+mongoose.connect("mongodb+srv://adminzineddine:adminpassword@mycluster.sprtu.mongodb.net/myFirstDatabase", 
     {
         useNewUrlParser: true, 
         useUnifiedTopology: true,

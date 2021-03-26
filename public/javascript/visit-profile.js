@@ -3,10 +3,12 @@ console.log("profileID: "+profileID);
 getProfileCards();
 
 function getProfileCards() {
+    $("#p-loading").css("display", "block");
     $.ajax({
         type: "POST",
         url: "/visit-profile/get-cards/"+ profileID,
         success: function(cards) {
+            $("#p-loading").css("display", "none");
             if(cards.length==0){
                 $("#h5-no-cards").css("display", "block");
             } else {

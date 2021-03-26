@@ -1,15 +1,21 @@
 $("#input-search").on("input", ()=>{
     const searchQuery = $("#input-search").val();
     if(searchQuery == null) {
-        adjustUI(0);
+        $(".col-added").remove();
+        $("#p-no-results").css("display", "block");
+        $("#p-loading").css("display", "none");
         return;
     } else if(searchQuery == "") {
-        adjustUI(0);
+        $(".col-added").remove();
+        $("#p-no-results").css("display", "block");
+        $("#p-loading").css("display", "none");
         return;
     }
+    $("#p-no-results").css("display", "none");
     sendQueryToServer(searchQuery);
 });
 function sendQueryToServer(searchQuery){
+    $("#p-loading").css("display", "block");
     $.ajax({
         type: "POST",
         url: "/dashboard/search/"+ searchQuery,
@@ -23,6 +29,7 @@ function sendQueryToServer(searchQuery){
     });
 }
 function addCards(cards){
+    $("#p-loading").css("display", "none");
     for(var i=0; i<cards.length; i++){
         $("#hidden-col").after(
             getCardHTML(
@@ -56,14 +63,6 @@ function getCardHTML(cardUserID, cardUserName, title, description, datetime, url
     '</div>';
 
     return card;
-}
-function adjustUI(length){
-    $(".col-added").remove();
-    if(length == 0) {
-        $("#p-no-results").css("display", "block");
-    } else {
-        $("#p-no-results").css("display", "none");
-    }
 }
 function getProfilePhoto(userID){
     $.ajax({
