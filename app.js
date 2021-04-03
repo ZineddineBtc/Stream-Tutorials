@@ -222,6 +222,16 @@ app.post("/profile/upload-photo", upload.single("image"), (req, res, next) => {
         });
 });
 
+app.post("/profile/delete-photo", function(req, res) {
+    User.findOneAndUpdate(
+        {_id: (req.user._id)}, 
+        {$set: {imgData: null, imgContentType: null}}, 
+        function(error, doc){
+            if(error) return console.log(error);
+            res.redirect("/profile");
+        });
+});
+
 app.post("/profile/get-cards", function(req, res){
     Card.find({userID: req.user._id}, function (error, docs) {
         if (error) {

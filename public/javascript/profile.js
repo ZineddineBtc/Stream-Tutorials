@@ -123,22 +123,11 @@ function extensionAndSizeChecked(){
         return false;
     }
 }
-
-/*$("#form-img-update").on("submit", function(event) {
-    event.preventDefault();
-    const files = $("#input-img").get(0).files;                   
-    $.ajax({                         
-        type: "POST",
-        url: "profile/upload-photo", 
-        cache: false,
-        contentType: false,
-        processData: false,
-        data: files[0],
-        success: function(result){
-            alert(result); 
-        }
-    });  
-});*/
+$("#btn-img-delete").click(function(){
+    const c = confirm("Are you sure you want to delete it?");
+    if(!c) return;
+    $("#form-img-delete").trigger("submit");
+}); 
 ////////////////////    Create card    //////////////////////
 let errorMessage, title, description, datetime, url;
 $("#btn-card-create").click(()=>{
