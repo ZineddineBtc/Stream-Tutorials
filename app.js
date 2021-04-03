@@ -196,7 +196,7 @@ app.post("/profile/update/:toUpdate/:name/:bio", function(req, res){
     }
 });
 
-app.post("/profile/upload-photo", upload.single("image"), (req, res, next) => {
+app.post("/profile/upload-photo", function(req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send("No files were uploaded.");
     }
