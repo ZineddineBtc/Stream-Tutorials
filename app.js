@@ -21,14 +21,14 @@ const Card = require("./models/card");
 const { send } = require("process");
 const { profile } = require("console");
 
-mongoose.connect("mongodb+srv://adminzineddine:adminpassword@mycluster.sprtu.mongodb.net/myFirstDatabase", 
-    {
-        useNewUrlParser: true, 
-        useUnifiedTopology: true,
-        useFindAndModify: false, 
-        useCreateIndex: true
-    }
-);
+// mongoose.connect("mongodb+srv://adminzineddine:adminpassword@mycluster.sprtu.mongodb.net/myFirstDatabase", 
+//     {
+//         useNewUrlParser: true, 
+//         useUnifiedTopology: true,
+//         useFindAndModify: false, 
+//         useCreateIndex: true
+//     }
+// );
 
 
 const app = express();
